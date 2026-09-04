@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SeriesApp - Recomendaciones</title>
+  <link rel="stylesheet" href="style.css">
+<!-- Enlace al Manifest -->
+<link rel="manifest" href="manifest.json" />
+
+<!-- Color del tema para la barra del navegador en móvil -->
+<meta name="theme-color" content="#000000" />
+
+<!-- Ajustes específicos para iOS / Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Mi App" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
+
+  <!-- CDN de Supabase en el navegador -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <header class="header">
+    <div class="logo">🍿 SeriesApp</div>
+    <nav class="nav">
+      <span id="user-info" class="user-info"></span>
+      <button id="btn-logout" class="btn-logout" style="display: none;">Cerrar Sesión</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    
+    <!-- SECCIÓN DE LOGIN / REGISTRO -->
+    <section id="sec-auth" class="card-form">
+      <h2>Ingresar a SeriesApp</h2>
+      <p class="subtitle">Iniciá sesión o registrate para publicar tus recomendaciones</p>
+
+      <form id="form-auth">
+        <div class="form-group">
+          <label for="auth-email">Correo Electrónico</label>
+          <input type="email" id="auth-email" placeholder="alumno@escuela.edu.ar" required>
+        </div>
+
+        <div class="form-group">
+          <label for="auth-password">Contraseña</label>
+          <input type="password" id="auth-password" placeholder="******" minlength="6" required>
+        </div>
+
+        <div class="auth-buttons">
+          <button type="button" id="btn-login" class="btn-primary">Iniciar Sesión</button>
+          <button type="button" id="btn-register" class="btn-secondary">Registrarse</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- SECCIÓN FORMULARIO (SOLO VISIBLE CON SESIÓN ACTIVA) -->
+    <section id="sec-formulario" class="card-form" style="display: none;">
+      <h2>Recomendar una Serie</h2>
+      <p class="subtitle">Compartí con la comunidad tus series favoritas</p>
+
+      <form id="form-serie">
+        <div class="form-group">
+          <label for="titulo">Título de la serie</label>
+          <input type="text" id="titulo" placeholder="Ej: Stranger Things" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="genero">Género</label>
+            <select id="genero" required>
+              <option value="" disabled selected>Seleccioná...</option>
+              <option value="Ciencia Ficción">Ciencia Ficción</option>
+              <option value="Drama">Drama</option>
+              <option value="Comedia">Comedia</option>
+              <option value="Acción">Acción</option>
+              <option value="Terror">Terror</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="puntuacion">Puntuación (1 al 10)</label>
+            <input type="number" id="puntuacion" min="1" max="10" step="0.5" value="8" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="imagen">URL de la Portada/Imagen</label>
+          <input type="url" id="imagen" placeholder="https://imagen.com/poster.jpg">
+        </div>
+
+        <div class="form-group">
+          <label for="resena">¿Por qué la recomendás? (Reseña breve)</label>
+          <textarea id="resena" rows="3" placeholder="Contanos qué es lo que más te gustó..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary">Publicar Recomendación</button>
+      </form>
+    </section>
+
+    <!-- SECCIÓN CATÁLOGO DE SERIES -->
+    <section id="catalogo" class="catalog-section">
+      <h2>Catálogo de la Comunidad</h2>
+      <div id="contenedor-cards" class="grid-cards">
+        <!-- Las tarjetas se cargarán dinámicamente con JavaScript -->
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Proyecto Demo - Escuela Técnica | Desarrollo de Software</p>
+  </footer>
+
+  <!-- Carga de scripts en orden -->
+<!-- 2. Tu cliente configurado -->
+  <script src="supabaseClient.js"></script>
+  
+  <!-- 3. La lógica principal de la app -->
+  <script src="main.js"></script>  
+
+</body>
+</html>
