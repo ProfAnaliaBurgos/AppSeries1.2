@@ -113,15 +113,41 @@ formSerie.addEventListener('submit', async (e) => {
     return;
   }
 
-  // Capturar datos del formulario
   const titulo = document.getElementById('titulo').value;
   const genero = document.getElementById('genero').value;
   const puntuacion = parseFloat(document.getElementById('puntuacion').value);
-  const imagenUrl = document.getElementById('imagen').value || 'https://via.placeholder.com/300x400?text=Sin+Portada';
   const resena = document.getElementById('resena').value;
+  
+  // Archivo seleccionado en el celular
+  const archivoInput = document.getElementById('imagen-file');
+  const archivo = archivoInput.files[0];
 
-  // Insertar en la tabla 'series' de Supabase
-  const { data, error } = await supabase
+  let imagenUrl = 'https://via.placeholder.com/300x400?text=Sin+Portada';
+
+  if (archivo) {
+    // Generar un nombre único para la imagen
+    const nombreArchivo = `${Date.now()}_${archivo.name}`;
+
+    // Subir archivo al bucket 'portadas'
+    const { data: storageData, error: storageError } = await supabase.storage
+      .from('portadas')
+      .upload(nombreArchivo, archivo);
+
+    if (storageError) {
+      alert("Error al subir la imagen: " + storageError.message);
+      return;
+    }
+
+    // Obtener la URL pública de la foto subida
+    const { data: urlData } = supabase.storage
+      .from('portadas')
+      .getPublicUrl(nombreArchivo);
+
+    imagenUrl = urlData.publicUrl;
+  }
+
+  // Guardar en la tabla 'series'
+  const { error } = await supabase
     .from('series')
     .insert([
       {
@@ -139,10 +165,9 @@ formSerie.addEventListener('submit', async (e) => {
   } else {
     alert('¡Serie recomendada con éxito!');
     formSerie.reset();
-    cargarCatalogo(); // Recargar las tarjetas
+    cargarCatalogo();
   }
 });
-
 // ==========================================
 // 3. OBTENER Y MOSTRAR CATÁLOGO DE SERIES
 // ==========================================
